@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+.env/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+eggs/
+*.egg-info/
+.eggs/
+
+# Logs and runtime files
+*.log
+*.pid
+*.pid.lock
+
+# Uploaded files and output
+uploads/
+*.db
+*.sqlite3
+*.html
+
+# VSCode and other IDE settings
+.vscode/
+.idea/
+*.swp
+
+# Python metadata and cache
+.pytest_cache/
+.coverage
+.tox/
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# dotenv config (if used)
+.env
+.env.*
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Static & media cache (if used)
+staticfiles/
+media/
