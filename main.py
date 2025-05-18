@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-from services.pdf_to_html import convert_pdf_to_text
+from services.pdf_to_html import convert_pdf_to_html_via_docx
 from services.docx_to_html import convert_docx_to_html
 from services.pdf_to_docx import convert_pdf_to_docx
 
@@ -23,13 +23,13 @@ async def home(request: Request):
 
 @app.get("/convert/pdf-to-html")
 async def pdf_form(request: Request):
-    return templates.TemplateResponse("pdf_convert.html", {"request": request})
+    return templates.TemplateResponse("pdf_to_html.html", {"request": request})
 
 
 @app.post("/convert/pdf-to-html")
 async def upload_pdf(request: Request, file: UploadFile = File(...)):
-    text, html_filename = await convert_pdf_to_text(file)
-    return templates.TemplateResponse("pdf_convert.html", {
+    text, html_filename = await convert_pdf_to_html_via_docx(file)
+    return templates.TemplateResponse("pdf_to_html.html", {
         "request": request,
         "converted": True,
         "content": text,
