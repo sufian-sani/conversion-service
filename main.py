@@ -9,7 +9,10 @@ from services.pdf_to_docx import convert_pdf_to_docx
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/html", StaticFiles(directory="uploads/html"), name="html")
+# app.mount("/html", StaticFiles(directory="uploads/html"), name="html")
+app.mount("/doc-html", StaticFiles(directory="uploads/doc-html"), name="doc-html")
+app.mount("/pdf-doc", StaticFiles(directory="uploads/pdf-doc"), name="pdf-doc")
+app.mount("/pdf-html", StaticFiles(directory="uploads/pdf-html"), name="pdf-html")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -30,7 +33,7 @@ async def upload_pdf(request: Request, file: UploadFile = File(...)):
         "request": request,
         "converted": True,
         "content": text,
-        "download_link": f"/html/{html_filename}" if html_filename else None
+        "download_link": f"/pdf-html/{html_filename}" if html_filename else None
     })
 
 @app.get("/convert/pdf-to-docx")
@@ -44,7 +47,7 @@ async def pdf_to_docx_upload(request: Request, file: UploadFile = File(...)):
     return templates.TemplateResponse("pdf_to_docx.html", {
         "request": request,
         "converted": bool(docx_filename),
-        "download_link": f"/html/{docx_filename}" if docx_filename else None
+        "download_link": f"/pdf-doc/{docx_filename}" if docx_filename else None
     })
 
 
@@ -60,5 +63,5 @@ async def upload_docx(request: Request, file: UploadFile = File(...)):
         "request": request,
         "converted": True,
         "content": text,
-        "download_link": f"/html/{html_filename}" if html_filename else None
+        "download_link": f"/doc-html/{html_filename}" if html_filename else None
     })

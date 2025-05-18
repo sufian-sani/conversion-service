@@ -1,7 +1,7 @@
 import os, uuid
 from PyPDF2 import PdfReader
 
-UPLOAD_DIR = "uploads/html"
+UPLOAD_DIR = "uploads/pdf-html"
 
 async def convert_pdf_to_text(file) -> tuple[str, str]:
     if not file.filename.endswith(".pdf"):

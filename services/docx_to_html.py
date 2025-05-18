@@ -1,7 +1,7 @@
 import os, uuid
 import mammoth
 
-UPLOAD_DIR = "uploads/html"
+UPLOAD_DIR = "uploads/doc-html"
 
 async def convert_docx_to_html(file) -> tuple[str, str]:
     if not file.filename.endswith(".docx"):
