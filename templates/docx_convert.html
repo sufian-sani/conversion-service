@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOCX to HTML</title>
+</head>
+<body>
+    <p><a href="/" style="text-decoration: none;">⬅ Back to Home</a></p>
+    <h1>Upload DOCX File</h1>
+    <form action="/convert/docx-to-html" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".docx" required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if converted %}
+    <h2>Converted Content</h2>
+    <div style="white-space: pre-wrap; background: #f0f0f0; padding: 1em;">
+        {{ content }}
+    </div>
+    {% if download_link %}
+    <p><a href="{{ download_link }}" download>⬇ Download HTML</a></p>
+    {% endif %}
+    {% endif %}
+</body>
+</html>
