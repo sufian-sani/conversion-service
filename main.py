@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from services.pdf_to_html import convert_pdf_to_html_via_docx
 from services.docx_to_html import convert_docx_to_html
 from services.pdf_to_docx import convert_pdf_to_docx
+from services.doc_to_pdf import convert_doc_to_pdf
 
 app = FastAPI()
 
@@ -13,6 +14,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/doc-html", StaticFiles(directory="uploads/doc-html"), name="doc-html")
 app.mount("/pdf-doc", StaticFiles(directory="uploads/pdf-doc"), name="pdf-doc")
 app.mount("/pdf-html", StaticFiles(directory="uploads/pdf-html"), name="pdf-html")
+app.mount("/doc-pdf", StaticFiles(directory="uploads/doc-pdf"), name="doc-pdf")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -64,4 +66,19 @@ async def upload_docx(request: Request, file: UploadFile = File(...)):
         "converted": True,
         "content": text,
         "download_link": f"/doc-html/{html_filename}" if html_filename else None
+    })
+
+
+# word to pdf
+@app.get("/convert/doc-to-pdf")
+async def doc_to_pdf_form(request: Request):
+    return templates.TemplateResponse("doc-to-pdf-convert.html", {"request": request})
+
+@app.post("/convert/doc-to-pdf")
+async def upload_docx_pdf(request: Request, file: UploadFile = File(...)):
+    pdf_filename, _ = await convert_doc_to_pdf(file)
+    return templates.TemplateResponse("doc-to-pdf-convert.html", {
+        "request": request,
+        "converted": bool(pdf_filename),
+        "download_link": f"/doc-pdf/{pdf_filename}" if pdf_filename else None
     })

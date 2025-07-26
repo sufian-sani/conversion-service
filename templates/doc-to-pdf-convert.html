@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOCX to PDF</title>
+</head>
+<body>
+    <p><a href="/" style="text-decoration: none;">⬅ Back to Home</a></p>
+    <h1>Upload Doc File</h1>
+    <form action="/convert/doc-to-pdf" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".doc,.docx" required>
+        <button type="submit">Convert</button>
+    </form>
+    {% if converted %}
+        {% if download_link %}
+            <p><a href="{{ download_link }}" download>⬇ Download PDF</a></p>
+        {% endif %}
+    {% endif %}
+</body>
+</body>
+</html>
