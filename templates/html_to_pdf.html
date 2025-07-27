@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML to PDF Converter</title>
+</head>
+<body>
+    <h2>Convert HTML to PDF</h2>
+    <form action="/convert/html-to-pdf" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".html" required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if converted %}
+        <p>✅ Conversion Successful!</p>
+        <a href="{{ download_link }}" download>Download PDF</a>
+    {% endif %}
+    
+    <hr>
+    <a href="/">⬅ Back to Home</a>
+</body>
+</html>
