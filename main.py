@@ -76,7 +76,7 @@ async def doc_to_pdf_form(request: Request):
 
 @app.post("/convert/doc-to-pdf")
 async def upload_docx_pdf(request: Request, file: UploadFile = File(...)):
-    pdf_filename, _ = await convert_doc_to_pdf(file)
+    pdf_filename = await convert_doc_to_pdf(file)
     return templates.TemplateResponse("doc-to-pdf-convert.html", {
         "request": request,
         "converted": bool(pdf_filename),

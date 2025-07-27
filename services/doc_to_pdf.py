@@ -3,34 +3,49 @@ import uuid
 import subprocess
 
 UPLOAD_DIR = "uploads/doc-pdf"
-PDF_DIR = "uploads/pdf"
+PDF_DIR = "uploads/doc-pdf"  # keep in the same folder for easy access
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(PDF_DIR, exist_ok=True)
 
-async def convert_doc_to_pdf(file) -> tuple[str, str]:
+async def convert_doc_to_pdf(file) -> str:
     """
-    Converts a DOC/DOCX file to PDF and returns:
-    (pdf_filename, pdf_filename_for_url)
+    Converts a DOC/DOCX file to PDF and returns the PDF filename.
     """
     if not (file.filename.endswith(".docx") or file.filename.endswith(".doc")):
-        return "", ""
+        return ""
 
     # ✅ Save uploaded DOC/DOCX file
-    file_path = os.path.join(UPLOAD_DIR, f"{uuid.uuid4()}{os.path.splitext(file.filename)[1]}")
-    with open(file_path, "wb") as f:
+    ext = os.path.splitext(file.filename)[1]
+    saved_docx_filename = f"{uuid.uuid4()}{ext}"
+    saved_docx_path = os.path.join(UPLOAD_DIR, saved_docx_filename)
+
+    with open(saved_docx_path, "wb") as f:
         f.write(await file.read())
 
-    # ✅ Convert DOC/DOCX to PDF using LibreOffice (headless mode)
-    subprocess.run([
-        "libreoffice", "--headless", "--convert-to", "pdf",
-        "--outdir", PDF_DIR, file_path
-    ], check=True)
+    # ✅ Convert DOC/DOCX to PDF using LibreOffice
+    try:
+        subprocess.run([
+            "libreoffice", "--headless",
+            "--convert-to", "pdf",
+            "--outdir", PDF_DIR,
+            saved_docx_path
+        ], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Conversion failed: {e}")
+        return ""
 
-    # ✅ PDF file name (same as saved file, but with .pdf extension)
-    pdf_filename = f"{os.path.splitext(os.path.basename(file_path))[0]}.pdf"
+    # ✅ Find generated PDF name (LibreOffice uses original filename)
+    pdf_filename = f"{os.path.splitext(os.path.basename(saved_docx_filename))[0]}.pdf"
+    pdf_path = os.path.join(PDF_DIR, pdf_filename)
 
-    # ✅ Optionally delete the original DOC/DOCX file (like you did in HTML version)
-    os.remove(file_path)
+    # ✅ Delete original DOC/DOCX to save space
+    if os.path.exists(saved_docx_path):
+        os.remove(saved_docx_path)
 
-    return pdf_filename, pdf_filename
+    # ✅ Ensure the PDF was generated
+    if not os.path.exists(pdf_path):
+        print("PDF was not generated!")
+        return ""
+
+    return pdf_filename
