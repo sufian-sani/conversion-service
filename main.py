@@ -7,6 +7,8 @@ from services.docx_to_html import convert_docx_to_html
 from services.pdf_to_docx import convert_pdf_to_docx
 from services.doc_to_pdf import convert_doc_to_pdf
 from services.html_to_pdf import convert_html_to_pdf
+from services.pdf_to_image import convert_pdf_to_images
+
 
 app = FastAPI()
 
@@ -17,6 +19,7 @@ app.mount("/pdf-doc", StaticFiles(directory="uploads/pdf-doc"), name="pdf-doc")
 app.mount("/pdf-html", StaticFiles(directory="uploads/pdf-html"), name="pdf-html")
 app.mount("/doc-pdf", StaticFiles(directory="uploads/doc-pdf"), name="doc-pdf")
 app.mount("/html-pdf", StaticFiles(directory="uploads/html-pdf"), name="html-pdf")
+app.mount("/pdf-images", StaticFiles(directory="uploads/pdf-images"), name="pdf-images")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -98,4 +101,17 @@ async def html_to_pdf_upload(request: Request, file: UploadFile = File(...)):
         "request": request,
         "converted": bool(pdf_filename),
         "download_link": f"/html-pdf/{pdf_filename}" if pdf_filename else None
+    })
+
+# pdf to image
+@app.get("/convert/pdf-to-images")
+async def pdf_to_images_form(request: Request):
+    return templates.TemplateResponse("pdf_to_images.html", {"request": request})
+
+@app.post("/convert/pdf-to-images")
+async def pdf_to_images_upload(request: Request, file: UploadFile = File(...)):
+    image_filenames = await convert_pdf_to_images(file)
+    return templates.TemplateResponse("pdf_to_images.html", {
+        "request": request,
+        "images": image_filenames
     })

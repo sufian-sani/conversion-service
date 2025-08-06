@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF to Images</title>
+</head>
+<body>
+    <h2>Convert PDF to Images</h2>
+    <form action="/convert/pdf-to-images" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".pdf" required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if images %}
+        <h3>Converted Images:</h3>
+        {% for image in images %}
+            <div>
+                <img src="/pdf-images/{{ image }}" style="max-width: 400px;" />
+                <p><a href="/pdf-images/{{ image }}" download>Download</a></p>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <br>
+    <a href="/">⬅ Back to Home</a>
+</body>
+</html>
