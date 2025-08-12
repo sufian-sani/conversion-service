@@ -8,6 +8,7 @@ from services.pdf_to_docx import convert_pdf_to_docx
 from services.doc_to_pdf import convert_doc_to_pdf
 from services.html_to_pdf import convert_html_to_pdf
 from services.pdf_to_image import convert_pdf_to_images
+from services.word_to_image import convert_docx_to_images
 
 
 app = FastAPI()
@@ -20,6 +21,7 @@ app.mount("/pdf-html", StaticFiles(directory="uploads/pdf-html"), name="pdf-html
 app.mount("/doc-pdf", StaticFiles(directory="uploads/doc-pdf"), name="doc-pdf")
 app.mount("/html-pdf", StaticFiles(directory="uploads/html-pdf"), name="html-pdf")
 app.mount("/pdf-images", StaticFiles(directory="uploads/pdf-images"), name="pdf-images")
+app.mount("/word-image", StaticFiles(directory="uploads/word-image"), name="word-image")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -114,4 +116,17 @@ async def pdf_to_images_upload(request: Request, file: UploadFile = File(...)):
     return templates.TemplateResponse("pdf_to_images.html", {
         "request": request,
         "images": image_filenames
+    })
+
+# word to image
+@app.get("/convert/word-to-image")
+async def word_to_image_form(request: Request):
+    return templates.TemplateResponse("word_to_image.html", {"request": request})
+
+@app.post("/convert/word-to-image")
+async def word_to_image_upload(request: Request, file: UploadFile = File(...)):
+    images = await convert_docx_to_images(file)
+    return templates.TemplateResponse("word_to_image.html", {
+        "request": request,
+        "images": images
     })

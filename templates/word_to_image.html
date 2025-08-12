@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WORD to IMAGE</title>
+</head>
+<body>
+    <p><a href="/" style="text-decoration: none;">⬅ Back to Home</a></p>
+    <h2>Convert WORD to IMAGE</h2>
+    <form action="/convert/word-to-image" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".doc,.docx" required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if images %}
+        <h3>Converted Images</h3>
+        {% for img in images %}
+            <div>
+                <img src="{{ img }}" width="300"><br>
+                <a href="{{ img }}" download>Download</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
