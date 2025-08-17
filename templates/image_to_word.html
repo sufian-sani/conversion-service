@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image to Word</title>
+</head>
+<body>
+    <p><a href="/" style="text-decoration: none;">⬅ Back to Home</a></p>
+    <h2>Upload Images to Convert into Word</h2>
+    <form action="/convert/image-to-word" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" multiple required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if word %}
+        <p>Download your Word file: <a href="{{ word }}" target="_blank">Click Here</a></p>
+    {% endif %}
+</body>
+</html>

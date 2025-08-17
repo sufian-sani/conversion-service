@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from services.excel_to_pdf import convert_excel_to_pdf
 from services.excel_to_word import convert_excel_to_word
 from services.image_to_pdf import convert_images_to_pdf
+from services.image_to_word import convert_images_to_word
 from services.pdf_to_html import convert_pdf_to_html_via_docx
 from services.docx_to_html import convert_docx_to_html
 from services.pdf_to_docx import convert_pdf_to_docx
@@ -186,6 +187,25 @@ async def excel_to_pdf(request: Request, file: UploadFile = File(...)):
         return templates.TemplateResponse("excel_to_pdf.html", {
             "request": request,
             "pdf": f"/{output_path}"
+        })
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+# image to word
+@app.get("/convert/image-to-word")
+async def image_to_word_form(request: Request):
+    return templates.TemplateResponse("image_to_word.html", {"request": request})
+
+
+@app.post("/convert/image-to-word")
+async def image_to_word(request: Request, files: list[UploadFile] = File(...)):
+    try:
+        output_path = await convert_images_to_word(files)
+
+        return templates.TemplateResponse("image_to_word.html", {
+            "request": request,
+            "word": f"/{output_path}"
         })
     except Exception as e:
         return {"error": str(e)}
