@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
+from services.image_to_pdf import convert_images_to_pdf
 from services.pdf_to_html import convert_pdf_to_html_via_docx
 from services.docx_to_html import convert_docx_to_html
 from services.pdf_to_docx import convert_pdf_to_docx
@@ -130,3 +131,22 @@ async def word_to_image_upload(request: Request, file: UploadFile = File(...)):
         "request": request,
         "images": images
     })
+
+
+# image to pdf
+@app.get("/convert/image-to-pdf")
+async def image_to_pdf_form(request: Request):
+    return templates.TemplateResponse("image_to_pdf.html", {"request": request})
+
+
+@app.post("/convert/image-to-pdf")
+async def image_to_pdf(request: Request, files: list[UploadFile] = File(...)):
+    try:
+        output_path = await convert_images_to_pdf(files)
+
+        return templates.TemplateResponse("image_to_pdf.html", {
+            "request": request,
+            "pdf": f"/{output_path}"
+        })
+    except Exception as e:
+        return {"error": str(e)}

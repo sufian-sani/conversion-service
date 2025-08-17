@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IMAGE to PDF</title>
+</head>
+<body>
+    <p><a href="/" style="text-decoration: none;">⬅ Back to Home</a></p>
+    <h2>Convert IMAGE to PDF</h2>
+    <form action="/convert/image-to-pdf" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" accept="image/*" multiple required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if pdf %}
+        <h3>Converted PDF</h3>
+        <iframe src="{{ pdf }}" width="600" height="500"></iframe><br>
+        <a href="{{ pdf }}" download>Download PDF</a>
+    {% endif %}
+</body>
+</html>
