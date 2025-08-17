@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
+from services.excel_to_word import convert_excel_to_word
 from services.image_to_pdf import convert_images_to_pdf
 from services.pdf_to_html import convert_pdf_to_html_via_docx
 from services.docx_to_html import convert_docx_to_html
@@ -147,6 +148,25 @@ async def image_to_pdf(request: Request, files: list[UploadFile] = File(...)):
         return templates.TemplateResponse("image_to_pdf.html", {
             "request": request,
             "pdf": f"/{output_path}"
+        })
+    except Exception as e:
+        return {"error": str(e)}
+    
+# Excel to Word (Form Page)
+@app.get("/convert/excel-to-word")
+async def excel_to_word_form(request: Request):
+    return templates.TemplateResponse("excel_to_word.html", {"request": request})
+
+
+# Excel to Word (Processing Upload)
+@app.post("/convert/excel-to-word")
+async def excel_to_word(request: Request, file: UploadFile = File(...)):
+    try:
+        output_path = await convert_excel_to_word(file)
+
+        return templates.TemplateResponse("excel_to_word.html", {
+            "request": request,
+            "word": f"/{output_path}"
         })
     except Exception as e:
         return {"error": str(e)}

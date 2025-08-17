@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel to Word</title>
+</head>
+<body>
+    <p><a href="/" style="text-decoration: none;">⬅ Back to Home</a></p>
+    <h2>Upload Excel File to Convert to Word</h2>
+    <form action="/convert/excel-to-word" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx" required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if word %}
+        <p>Download your converted file: <a href="{{ word }}" download>Download Word</a></p>
+    {% endif %}
+</body>
+</html>
