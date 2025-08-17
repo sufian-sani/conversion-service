@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel to PDF</title>
+</head>
+<body>
+    <h1>Convert Excel to PDF</h1>
+    <p><a href="/" style="text-decoration: none;">⬅ Back to Home</a></p>
+    <form action="/convert/excel-to-pdf" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx,.xls" required>
+        <button type="submit">Convert</button>
+    </form>
+
+    {% if pdf %}
+        <p>✅ Conversion done!</p>
+        <a href="{{ pdf }}" target="_blank">Download PDF</a>
+    {% endif %}
+</body>
+</html>
